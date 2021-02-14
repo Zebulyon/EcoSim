@@ -1,0 +1,155 @@
+\documentclass[11p]{article}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{fp}
+\begin{document}
+\title{Economy Simulator - Performance and simulation modelling}
+\author{Jonathan Hillblom \\ Email: \href{mailto:jonathan.hillblom@gmail.com}{jonathan.hillblom@gmail.com}
+\\
+Sebastian Olars \\ Email: \href{mailto: zebylonolars@gmail.com}{zebylonolars@gmail.com}}
+\maketitle
+\section{Introduction}
+
+How economic systems function, what the critical parts of these economic systems are and how to model these are all interesting questions to which we'll attempt to give an answer in this project.
+
+More specifically we will attempt to create an approximated realistic economic simulator which sets up a society of actors that can use different resources to produce new resources. We'll see how these actors function under the circumstances of not using a market at all, of being able to use barter trade, of being able to use currency to trade and if able how they'll behave under a \textit{FIAT} economy.
+
+Economic systems are all highly complex with lots of moving parts making it so that we are only going to be able to create a heavily simplified simulation of an actual economic environment. But we are still interested in seeing if real world behaviours and results could appear given a set of simplifying assumptions.
+
+Further on will be described the assumptions we're making for the different aspects of this economy, the measurements we were looking at and the justifications for these choices.
+
+\section{Description of model}
+The economic system got divided into several significant parts. Actors, resources, behaviors, and a market. With these we hoped to simulate the most fundamental parts of an economy.
+
+\subsection{Actors}
+
+Actors represented economic actors such as individuals, companies, corporations or even governments conducting production and trade. Actors are capable of producing resources and trading them using a market, the production and behavior of these actors was randomly determined and will be discussed further in the later sections.
+\subsection{Resources}
+Resources functioned as a fundamental part of the model, representing real world resources, both natural resources as well as services. Resources were used by Actors in both sale as well as production and were the final metric that was looked at in order to determine how well an economy was doing.
+\\
+
+The way resources were modelled there was almost no difference between each resource. The only difference between the resources came from how actors handled these during production as well as trading which was randomly determined.
+\subsection{Production}
+In order to simulate productivity in an economy some mechanism that allowed the creation of resources was required. We created this mechanism by allowing each actor to create new resources using old ones. In order to simulate the real world this production mechanism would have to allow for increased production if more producing resources were avaliable, as economies of scale can utilize their large stock of resources to create even more resources.
+\\
+
+In a real world economy there are two forms of production: conversion where one resource is converted to another resource. For example gold is converted into computer chips. The other way is creation where a resource and time is used to create a new resource but the old resource is not consumed. For example a programmer using a computer to create computer code.
+\\
+
+The decision was made that only the latter production behavior were to be modelled, this is because it was deemed to complex to have several resources that were treated in different ways during production and that in reality one would observe behavior that approximated the creative production since producers used some of the created resource to replenish the consumed resource.
+\\
+
+In order to create this behavior a production value was created that represented the capability of creating a new resource by an actor. This capability was represented by a percentage value that was later multiplied with the creating resource in order to produce some amount of the created resource.
+\\
+
+It is also possible for an actor in the real world to consume a resource either through bad investment or through regular consumption. This is simulated by allowing actors to have a negative production value. The negative production value would cause the actor to reduce the amount of that specific resource by their production value.
+\\
+
+A possibility of converging productivity was later introduced in order to limit individual actors from growing exponentially forever. Instead each actor could grow exponentially only up to a point where they started growing linearly. This introduction allowed for the simulation of actors that could not utilize a stock that is growing too quickly in an efficient manner. 
+For example if a small bakery is given a huge amount of bread dough, they wouldn't be able to use this large stock of resources efficiently because they don't have enough customers or equipment. As such the produced amount is converging towards some point where the actor is most capable of using their current stock. 
+\\
+
+The simulated converging productivity is done by using a arbitrarily chosen max value and then seeing if this smaller than the current resource stock. If this is the case then the stock used to produce new resources is the max value provided. As such an actor will not grow exponentially endlessly, but will instead grow exponentially for a time and after that grow linearly. This max value was set to be the same for all actors and resources, which is a possible flaw but this was done due to time constraints.
+\\
+
+Each individual however will be able to use a resource in their own way which is the reasoning behind randomizing the production values. Because of that the produced resource was also randomized. Both of the previously mentioned values was set at the start of the simulation and kept constant during the entire simulation.
+\subsection{Behavior}
+The behavior of actors in an economic model in reality is incredibly complex. Because of this level of complexity it is almost futile for a computer to attempt to simulate the behavior of individuals on an individual level. This forces one to make generalizations and assumptions for the behaviour in the hope that the outliers will cancel one another out.
+\\
+
+When behavior is used in this project it is referring to the market behavior of individuals, as in how much of a resource they will sell and at what price they will sell it at.
+\\
+
+There are many ways to do simple modelling of behavior with this level of abstraction. One way is to program some simple rationality into each actor and give them a bias on how to behave in order to have a higher productivity, say for example that actors trended towards selling products that they were bad at using and buying products they were good at using. This form of rationality was considered but discarded with the justification that programming behavior like this into a actor wouldn't yield interesting behavior nor would it produce the behavior that we're trying to model because in the real world an actor does not know directly their productivity with some given resource. 
+\\
+
+The behavior that was settled at was the following: An actor would at the start of the simulation randomly choose some percentage for each resource that represented how much of their current stock they would sell each day. They would also randomly choose a percentage that described the divergence in price they would sell at given the market price from the previous day.
+\\
+
+This behaviour is not ideal as in order to approximate prices no actor has a specific price to which they strive for. Instead the price of a product will be dictated in how efficiently actors can use the resource to produce more resources. The reasoning being that if they buy the resources they will be able to produce more causing a growth in their economical situation allowing them to buy more resources causing a feedback loop. These feedback loops will make it so the actors will be able to buy more and more of it causing the price to go up. Similarily if the price of a product is too high for an actor to use efficiently, they will be less capable of buying it, meaning that the price should go down.
+\\
+This will then make it so that the "smart" actors of the simulation will be the one that have access and uses these feedback loops and the "dumb" ones will be the ones that directly goes against it.
+
+The hope is that this random and simple behavior will still be able to  capture the ability for economic actors to change pricing partway through an economy. 
+
+\subsection{Market}
+
+The purpose of the market was to match offers from one actor with the offers of another. There were several types of markets that were considered. One idea was to have a two-phase market which let actors post trades and then other actors can bid on these posts and the market matches the posts with bids. This type of market seemed easy to implement but required a more complex decision making system for the actors as they had to decide to make posts as well as bids.
+\\
+The chosen model was to create a one-phase market that only allowed posts to be made and then matched these posts with each other according to some metric. Because of the nature of this simulation model one would not be able to use a time-continuous market, instead a discrete market was used. This market then took in all of the posts of actors and matched them through the chosen metric, irregardless of which order or time these posts were made.
+\\
+
+The market that was used was one that prioritized matching non-greedy offers with other non-greedy offers, where a greedy offer was defined as an offer that had a high ratio between the amount of wanted products and the amount of offered products. 
+\\
+The market also made sure that if an actor makes a post they will never be matched with a deal that is worse than the one they proposed.
+The model also uses a market that clears all posts after each day. Leaving posts up was considered but in reality actors remove offers after they get old, and requiring actors to post all of their offers each day seemed like a more realistic approach to a market.
+
+\subsection{Economic Models}
+
+Three different forms of economy was tested during this project. Those being no trade, barter trade and the utilization of currency. Each of these economic models were then tested on the basis of the total amount of resources that were left at the end of the simulation. This metric would show how efficiently each of the economic models were at allocating the resources where they were best utilized.
+
+The models that allowed trade was also compared on the metric of how many trades were had in a day. This was to see if there was a difference in market movement depending on if one used currency or not.
+\\
+
+The first economic model that was tested was one in which no trade was allowed. This would be the control group to see if trade in any form had a positive effect on the economy or not.
+
+The second model that was tested was a barter economy where all resources could be traded for all other resources on the market.
+
+The third model that was tested was a currency dependent economy where resources are traded for money and money for resources. This model did not utilize inflation so there were a fixed amount of currency that existed during the entirety of the simulation.
+
+
+\section{Results}
+
+\subsection{Results}
+The results from the simulation do not indicate that there is a difference between a market that utilizes barter trade or currency compared to not trading at all. No-trade being the one that ended with the highest amount of resources at the end of the simulation.
+
+Introducing the convergence factor in order to see if this limited production per actor would change the results did not yield any changes to the results. 
+
+The numerical result did of course depend on what kind of inputs were given but changing these did not seem to change whether or not the markets were more efficient than the no-trade system. A raw dump of some results will be submitted with the report. 
+\subsection{Problems}
+The code for the simulation is too unoptimized to allow us to perform the simulation with our original population size of 1,000,000 actors. A solution to this problem would be to utilize more abstraction though this would require a more concrete code structure and design before writing the code. 
+\\
+
+One possible solution would be to instead of having a \textit{Behaviour} and \textit{Actor}-class one could use a single large matrix containing all of the information of resources, actors and behaviours. Then all of the other functions would be either replaced or changed to instead use the built in array functions of the numpy module. 
+
+\subsection{What could have been improved}
+Another possible explanation for the poor performance could be that the behavior of actors was not dynamic. An actor didn't change their preferences for what resource they were looking for and selling for any reason. They did change how much they bought and sold depending on how many resources were available to them, but this was a static percentage. They also did change their pricing of resources depending on what the last sold price was but this was done in a static way, which could be significantly different from reality.
+\\
+
+Actors and resources didn't have any special relationships to each other. No resource was particularly good at creating some other resource, they were to each other the exact same. The difference between resources came from the different way they were treated by actors, some actors were able to utilize some resources more efficiently than others. However because of the very large amount of actors it seems like there was about the same utility for each resource which means that they were functionally the same. This could have been improved by perhaps creating more complex special relationships between resources, however this was deemed too complex and hard to accomplish within the time frame. The same problem exists with actors where it is possible that special relationships between actors could cause unique or interesting behaviors but the model did not allow for this.
+\\
+
+One of the reasons we saw the same efficiency amongst no-trade and trade could be that the symbiotic feedback loops of trading are cancelled out by loss of efficiency due to trade. For each actor capable of producing and selling their resources to others and thus creating a symbiotic relationship, you'll find actors who have access to positve feedback loops but unable to use them\\\\ are capable of self-sustaining by having a positive feedback loop that end up selling some critical resource and thus this positive feedback loop is lost due to trade.
+\\
+
+A fourth economic system was going to be created that utilized a \textit{FIAT}-economy which would be governed by a government actor. This would have been to see if inflation of a currency in a economy would have any significant effects on productivity and prices. The reason this was not modelled was that the other economic systems didn't seem to yield the results of a real economy and therefore it seemed more important to investigate what could be changed in order to closer model a real economy. For this reason the \textit{FIAT} system was put on hold and not enough time was found to explore it.
+\\
+
+THIS IS THE SAME AS THE THING DESCRIBED IN PROBLEMS
+A possible failure is the way that resources are essentially the same. It would be interesting if the resources had more uniqueness by having different ranges in how productive they could be or had bias in which other resources they could produce. This was too complex to create in the time given, but is a possible fault in not reproducing a real economy. In a real economy some resources are much more heavily tied together to each other than others. This could possibly cause internal symbiotic relationships between actors that specialize in creating one type of resource.
+\\
+Another thing that could have cause a divergence between our actual results and the expected results is that our behaviour models were to simplified. Meaning that a behaviour in which an actor strived to obtain more resources that was useful for itself instead of just blindly picking and choosing some random one. Would maybe deliver results more aligned with what we expected.
+\\
+
+Another behavior would be one in which an actor sets a target price for some resource. This price would then be sought by the actor by either being more generous when the market price is below the target price, and more stingy when the market price is above the target price. This way you would model actors that determine a value for some resource and then pursues that, much like reality.
+\\
+
+Having a more complex behaviour for the converging value could also be a point of improvements considering as it is now it is constant and  identical for all actors for all resources for the entire simulation.
+\\
+
+Tests were used for certain sections of the code, like the market, in order to verify the code and make sure it followed the analytical model but these could have been too few or done for the incorrect sections.
+
+\section{Conclusion}
+
+The results do not align with what we know of real life economies both from an analytical model and an empirical model. In reality the rate for economic growth goes up with more availability to trade.
+\\
+The results that we have show no significant difference in the total amount of resources between no trade, a barter economy and a currency dependent economy. 
+\\
+
+We did see some behavior that followed the trends seen in real economic systems as when we looked at the amount of trades over time they  increased as the wealth of the actors went up. This behaviour was also more prominent in the currency model than the barter trade which aligns well to real world economics. 
+\\
+
+The reason for why our result differ from the expected result could stem either from our analytical model of a society being incorrect or incomplete. Another possibility is that the written code does not follow the analytical model for some reason.
+\end{document}
+

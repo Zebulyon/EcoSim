@@ -1,0 +1,76 @@
+\documentclass[11p]{article}
+\begin{document}
+\title{Economy simulator}
+\author{Jonathan Hillblom \\ Email: \href{jonathan.hillblom@gmail.com}}
+\maketitle
+\section{Introduction}
+The purpose of this project is to create a very simple simulation of an economy made up of simplistic irrational actors with randomly defined behavior as well as randomly defined properties.
+The project also wants to expand the simulation to see what effect the introduction of a currency has on the economic prosperity of the system.
+If this is introduced it would also be interesting to see what effect the printing of currency and distribution by a governmental actor has on the prosperity.
+
+When using the word irrational in this document we're reffering to a randomly determined but deterministic behavior. In other words an actor will not act in his own self interest but after being generated will only change his behavior in a deterministic manner.
+Resources in this economy will not hold any different inherent properties from each other except that different actors will treat them differently in regards to consumption and production. This means that a resource is just a name and certain resources aren't any more critical or valuable than others.
+\section{Goals}
+The goals of this project is to see if the expected behavior of regular markets can be simulated with irrational actors in a fairly simple market model.
+The specific scenarios that we want to take a look at are the following:
+Is it more efficient to trade or not to trade? In other words will a society that allows trade have a significant more amount of resources than a society that does not allow for trade?
+Is it more efficient to have an enforced curreny or not? Will the society produce more resources if we only allow trade through a currency or if we only allow it through barter trade?
+Is it more efficient to have a state inject currency or not? Will the society have a higher production rate if we allow for the printing of money and injection into some random actors account? It would also be interesting to see that prices increase when printing money.
+Is it more efficient to have taxation to fund this injection or inflation? Is it more efficient if the printing of money is balanced out by taxation?
+
+\section{Market mechanics and their simulation}
+\subsection{Resources and productivity}
+In order to have an objective measure of wealth the concept of resources will be utilized. A random number of resource types will be avaliable within the economy, an actor can have a positive amount of any type and number of resource.
+In real world economics actors can utilize resources to invest and either produce a surplus of resources or make a bad investment wasting resources. This mechanism will be simulated by letting actors produce a random resource based on how much of another resource they hold or to remove a random amount of the resource they hold.
+In order to simulate economies of scale as well as reduced productivity because of unmanageable resources the productivity will change depending on how much of some resource is possessed. This change is going to be randomly determined.
+
+\subsection{Dynamic behavior}
+This is a problematic area and is not fully fleshed out yet, there are some considerations for possible solutions to this but none are set in stone as of yet.
+Behaviour must change depending on situation. Rich people tend to have different economic behaviors to poor people, in both consumption and investment.
+In order to simulate this we must allow random actors to change their behavior depending on their current resource based status. This behavior could be modeled as simple as having a set of different modes for each resource. For example one mode where the actor sells or keeps all of the resources or one mode where he sells only a partial amount. 
+This would be a fairly simple implementation but a more complex and perhaps more realistic solution would be to use a untrained neural network in order to randomly weigh all of the relevant variables in order to determine what action an actor is going to take.
+
+The behavior would probably depend on: Market price of resources, amount of resources, productivity, consumption
+\subsection{Irrational decisionmaking}
+In order to simulate irrationality in actors a randomization is used to generate their behavior and their other properties, such as their productivity, consumption habits, and starting resources.
+
+\subsection{Buying and selling}
+When buying and selling with each other the actors will require some facillitator, we'll call this the market or marketplace. The market can function in a couple of different ways, but for this simulation it will generally function discretely as a time-continual model seems too complex.
+How a market considers transactions can be done in different ways but the currently considered model is this:
+
+Each day there are 4 phases.
+First the production phase where each actor gets the resources they've produced for that day.
+Second the selling phase where each actor can put up their resources for some price onto the market, this price would be the minimum amount they get for a sale.
+Third the buy phase where each actor can buy some resource for a maximum price, the market will now match up buyers and sellers and facillitate this trade.
+Fourth each actor consumes their daily amount of resources.
+Repeat these phases for each day.
+
+\subsection{Consumption}
+In order to simulate consumption each actor will have randomly determined consumption habits. This mean they will need some amount of resources of some specific type each day in order to avoid dying.
+
+\subsection{Inventions and innovation}
+This is a problematic area for a simple model like this, innovation and inventions are hard to model. For this reason we'll assume that their impact can be seen as higher productivity of some actor.
+
+\subsection{Death and replacement of actors}
+In order to simulate death and bankruptcy we'll remove actors from the economy if they don't have enough resources to consume. This doesn't have to be the first time they're unable to consume their required resources but could be after consistently not consuming enough for some amount of time.
+
+We'll simulate birth in some way, either by having more actors born depending on the current size of the society or have new actors born in a constant way for example 1 actor per day.
+\section{Problems}
+\subsection{Methodological problems}
+How the market phases are laid out could possibly change the behavior. This doesn't necessarily pose that big of a problem, how the market facillitates trade could be consistent in each version and therefore wouldn't pose a significant difference in results.
+
+When creating the range of the randomized values we could potentially introduce some human bias in what we think intuitively is the correct proportion. For example if we gave every actor a random amount of resources between 0 and 1 000 000 000 but only gave them a random consumption between 0 and 10 resources we'd see a hugely disproportionate relationship.
+
+There is no easy way to solve this problem and it will be let up to the programmers to determine what an intuitive relationship is.
+
+How the decisions are made could possibly change the behavior: The decisionmaking process for an actor is hard to make into a uniform distribution so there could be some bias introduced in the behavior depending how this is determined. We hope that this can be solved by using either a neural network or with some other technique. If this can not be done we'll have to use some biased behavior for example the one explained in the dynamic behavior section.
+
+Important variables in a market could possibly have been forgotten or mismodelled. It is very hard to determine this beforehand and as such we don't have any suggestion for how to solve this.
+
+This simulation is discrete, therefore there could be problems in representing continual reality.
+\section{Validation}
+Because of the nature of the system we're trying to model being so chaotic and complex we won't be able to validate it with a large amount of certainty. The validation technique we'll use is to compare it with the theoretical trends that are seen by economists. Generally more trade should be beneficial. Currency is useful to facilitate trade and therefore shouldn't make trade less probable or worse. The introduction of currency injection is hard to validate as there is disagreement of what would happen in that case. We'll look to whether or not this causes a increase in prices (inflation).
+
+In order to compare the different systems we'll use the total amount of resources in the society as a metric for doing well. This of course does not include the currency. If a society has a significantly higher amount of resources after it has been running for some time it will be determined to perform better than the society having less resources.
+
+\end{document}

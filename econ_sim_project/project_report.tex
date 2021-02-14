@@ -1,0 +1,50 @@
+\documentclass[11p]{article}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{fp}
+\begin{document}
+\title{Economy Simulator - Performance and simulation modelling}
+\author{Jonathan Hillblom \\ Email: \href{mailto:jonathan.hillblom@gmail.com}{jonathan.hillblom@gmail.com}
+\\
+Sebastian Olars \\ Email: \href{mailto: zebylonolars@gmail.com}{zebylonolars@gmail.com}}
+\maketitle
+\section{Introduction}
+How economic systems function, what the critical parts of these economic systems and how to model these are all interesting questions to which we'll attempt to give an answer in this project.
+We will attempt to create a economic simulator that tries to set up a society of actors that can use different resources to produce new resources. We'll see how these actors function under the pressure of not trading, of being able to use barter trade, of being able to use currency to trade and if able how they'll behave under FIAT currency trade.
+
+These are hugely complex systems that deal with psychology, limited information theory, complex game theory and so on. We won't make claims about how the real world will necessarily act but we're rather interested in if it is possible to get similar results as you would expect from the real world in a simple simulation given some massively simplifying assumptions.
+
+Further on will be described the assumptions we're making for the different aspects of this economy, the measures we were looking at and the justifications for these. We'll also document the vast amount of problems we had during the project and what could have been done differently.
+\section{Description of model}
+The economic system got divided into several significant parts. The first part was the society of all actors, the resources and how these interacted with each other and themselves. The actors were all given a randomly selected amount of resources to start with as well as a random production value for each resource. 
+\subsection{Production}
+The production value was the simulated version of production in the real world. In an economy we can see that an actor (be it a company, a person, a corporation or some other economic entity) is capable of taking some resource and either producing some new resource with the help of this resource and time or converting the old resource to the new resource. Each actor is differently able to produce new resources this way, which is what is attempted to model by using a random value for this, they are also capable of producing different things with the same resource, which is why we again had a randomly produced resource for each resource. We could not in any simple way simulate both conversion as well as simple production and therefore all resources are only used to produce new resources, the justification being that a regardless of this production process being conversatory an actor will still produce a net amount and perhaps use a bit of this extra production to purchace more of the converter resource, ending up with the same amount but with a net produced amount of the produced resource.
+
+It is also possible to produce a negative amount of some resource. We chose to model this as consumption, in the case of negative production this will instead cause the consumed resource to reduce in size by a randomly chosen percentage. The justification for having this behavior in the model is that both consumption and poor investment does happen in an economy and the economic system must have some method for weeding out behavior like that if it becomes unsustainable.
+\subsection{Behavior}
+The behavior of actors in an economic model in reality increadibly complex. Because of this complexity it is almost futile for a computer simulation to attempt to simulate the behavior of individuals on an individual level. The only way one could ever approach a problem like this is to try to generalize the behavior of the group and hope that the outliars cancel each other out. 
+When behavior is used in this project it is refering to the market behavior of individuals, as in how much they sell of some product and at what price they sell this at.
+There are many ways to do simple modelling of behavior this way. One way is to program some simple rationalization into each actor and give them a bias on how to behave in order to have a higher productivity, say for example that actors trended towards selling products that they were bad at using and buying products they were good at using. This form of rationalization was considered but discarded with the justification that programing behavior like this into a actor wouldn't yield interesting behavior nor would it produce the behavior that we're trying to model because in the real world an actor does not know their productivity with some given resource. The behavior that was settled at was the following: An actor would randomly choose some percentage for each resource that represented how much of their current stock they would sell each day. They would also randomly choose a percentage that described the divergence in price they would sell at from the last days market price.
+This behavior isn't ideal in order to approximate prices as no actor will have a specific price that they strive for, instead competing actors will drive the price up and down depending on how useful some resource is at producing other things. We hope that this random and simple behavior still captures the ability for economic actors to change pricing partway through an economy.
+\subsection{Market}
+The purpose of the market was to match offers from one actor with the offers of another. There are several types of markets that were considered, a two-phase market that let actors post resource trades and then other actors can bid on these posts and the market matches posts with bids. This type of market seemed easy to implement but required a more complex decision making system for the actors as they had to decide to make posts as well as bids.
+The market that was created was instead a one-phase market that only allowed posts to be made and then matches these posts with each other according to some metric. Because of the nature of the simulation model we couldn't use a time-continous market, instead a discrete market was used that took in all of the posts of actors and matched these, irregardless of which order or time these posts were made.
+The market that was used was one that prioritized matching non-greedy offers with other non-greedy offers as well as making sure that if an actor makes a post they will never be matched with a deal that is worse than the one they proposed.
+The model also uses a market that clears all posts after each day. Leaving posts up was considered but in reality actors remove offers after they get old, and requiring actors to post all of their offers each day seemed like a more realistic approach to a market.
+\subsection{Tests}
+Three different economies were tested. The first one was an economy where no trade was allowed and actors could only produce with their own produced resources. The second economy tested was a barter economy where all resources could be traded for all other resources on the market. The third economy tested was a gold-standard currency economy where resources are traded for money and the money supply does not increase.
+\section{Results}
+The results achieved have been failures in the sense that they don't overlap with what we know of real world economics, but failures can be interesting and we will attempt to provide an analysis why these failures were encountered.
+WHAT HAPPENED
+In the case of the non-market economy
+
+Problems, in a barter economy trade wasn't stimulated, trade did not increase over time with the amount of resources
+
+\section{Problems}
+\subsection{What could be improved}
+
+
+\section{Conclusion}
+
+\end{document}
